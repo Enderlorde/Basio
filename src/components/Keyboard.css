@@ -1,0 +1,14 @@
+.calculator__keyboard{
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    top:250px;
+}
+
+.keyboard{
+    display: flex;
+    flex-wrap: wrap;
+    list-style: none;
+}

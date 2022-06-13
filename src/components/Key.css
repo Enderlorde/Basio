@@ -1,0 +1,81 @@
+.keyboard__item{
+    display: flex;
+    flex-direction: column;
+    width:75px;
+    height: 58px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.keyboard__label{
+    width: 100%;
+    color: #fff;
+    display: flex;
+    justify-content: space-evenly;
+    font-size: 10px;
+}
+
+.btn{
+    width: 50px;
+    height: 40px;
+    color: #fff;
+    border-radius: 10px;
+    border:3px solid #444A48;
+    box-shadow: 0 0 2px #000;
+    transition: background-color 0.1s ease-in-out; 
+    user-select: none;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    font-family: "Michroma", serif;
+    font-size: 16px;
+    font-weight: bold;
+
+    cursor: pointer;
+}
+
+
+.btn_func{
+    height: 30px;
+    border-radius: 5px;
+    font-size: 11px;
+}
+
+.btn_blue{
+    background-color: #4287A4;
+}
+
+.btn_blue:active{
+    background-color: #254c5c;
+    color: #ccc;
+}
+
+.btn_red{
+    background-color: #CF443F;
+}
+
+.btn_red:active{
+    background-color: #6b2220;
+    color: #ccc;
+}
+
+.btn_light{
+    background-color: #F6F7F2;
+    color: #000;
+}
+
+.btn_light:active{
+    background-color: #b2b3b0;
+}
+
+.btn_dark{
+    background-color: #55605C;
+}
+
+.btn_dark:active{
+    background-color: #48524e;
+    color: #ccc;
+}

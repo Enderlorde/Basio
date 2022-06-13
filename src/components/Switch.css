@@ -1,0 +1,37 @@
+.calculator__switch{
+    position: absolute;
+    top:80px;
+    left:-5px;
+}
+
+.switch{
+    background-color: #fff;
+    width: 8px;
+    height: 80px;
+    border-radius: 0 5px 5px 0;
+}
+
+.switch__wrapper{
+    position: relative;
+    height: 100%;
+}
+
+.switch__slider{
+    position: absolute;
+    top:70%;
+    right:0;
+    width:7px;
+    height: 10px;
+    background-color: #716E77;
+
+
+    cursor: pointer;
+}
+
+.slider{
+    transition: top 0.5s ease-in-out;
+}
+
+.switch__slider.active{
+    top:20%;
+}

@@ -1,0 +1,32 @@
+
+.btn_slider{
+    position: relative;
+    height: 25px;
+    background-color: #2C312D;
+}
+
+
+.btn_slider::after{
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 10%;
+    height: 15px;
+    width: 15px;
+    border-radius: 50%;
+    transform: translateY(-50%);
+    background-color: #1c1f1c;
+    transition: left 0.5s ease-in-out;
+}
+
+.btn_slider.active::after{
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 60%;
+    height: 15px;
+    width: 15px;
+    border-radius: 50%;
+    transform: translateY(-50%);
+    background-color: #1c1f1c;
+}
