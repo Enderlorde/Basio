@@ -1,14 +1,13 @@
 @font-face {
-    font-family: "Michroma";
-    src: url("../fonts/Michroma-Regular.ttf");
-}
-
-@font-face {
     font-family: "Digital-7";
     font-style: italic;
     src: url("../fonts/digital-7\ \(mono\ italic\).ttf");
 }
 
+@font-face {
+    font-family: "Michroma";
+    src: url("../fonts/Michroma-Regular.ttf");
+}
 
 .display{
     position: absolute;
@@ -24,6 +23,8 @@
         0 6px 3px -3px #333,
         0 -6px 3px -3px #333
     ;
+
+    font-family: Michroma, Helvetica, sans-serif;
 }
 
 .display__wrapper{
