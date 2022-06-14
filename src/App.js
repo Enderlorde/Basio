@@ -21,8 +21,8 @@ const App = ({screenSize}) => {
     {value: 'M+', className: 'btn_func btn_blue', func: () => addToMemory()},
     {value: 'AC', className: 'btn_func btn_red', func: () => reset()},
     {value: 'C', className: 'btn_func btn_blue', func: () => cancel()},
-    {value: '&radic;', className: 'btn_func btn_blue'},
-    {value: '%', className: 'btn_func btn_blue'},
+    {value: '&radic;', className: 'btn_func btn_blue', func: () => getRoot()},
+    {value: '%', className: 'btn_func btn_blue', func: () => getPercent()},
     {value: '7', className: 'btn_light', func: (e) => numberInputHandler(e)},
     {value: '8', className: 'btn_light', func: (e) => numberInputHandler(e)},
     {value: '9', className: 'btn_light', func: (e) => numberInputHandler(e)},
@@ -34,101 +34,127 @@ const App = ({screenSize}) => {
     {value: '1', className: 'btn_light', func: (e) => numberInputHandler(e)},
     {value: '2', className: 'btn_light', func: (e) => numberInputHandler(e)},
     {value: '3', className: 'btn_light', func: (e) => numberInputHandler(e)},
-    {value: '-', className: 'btn_dark', func: () => operatorInputHandler('substract')},
+    {value: '-', className: 'btn_dark', func: () => operatorInputHandler('difference')},
     {value: '0', className: 'btn_light', func: (e) => numberInputHandler(e)},
     {value: '.', className: 'btn_light', func: () => addPoint()},
     {value: '=', className: 'btn_dark', func: () => getResult()},
     {value: '+', className: 'btn_dark', func: () => operatorInputHandler('summary')},
   ]
   
-  console.log(`-----------------RERENDER----------------`);
+  console.log(`-----------------------RERENDER------------`);
   console.log(`buffer: ${buffer}`);
   console.log(`operation: ${operation}`);
   console.log(`memory: ${memory}`);
   console.log(`result: ${result}`);
 
+  Number.prototype.noExponents = function() {
+    var data = String(this).split(/[eE]/);
+    if (data.length == 1) return data[0];
+  
+    var z = '',
+      sign = this < 0 ? '-' : '',
+      str = data[0].replace('.', ''),
+      mag = Number(data[1]) + 1;
+  
+    if (mag < 0) {
+      z = sign + '0.';
+      while (mag++) z += '0';
+      return z + str.replace(/^\-/, '');
+    }
+    mag -= str.length;
+    while (mag--) z += '0';
+    return str + z;
+  }
+
   Number.prototype.round = function(places) {
-      return +(Math.round(this + "e+" + places)  + "e-" + places);
+        return Number(Math.round(this.noExponents() + "e+" + places)  + "e-" + places).noExponents();
   }
   
   const runOperation = (operator) => {
-    
     switch (operator){
         case 'difference':
-            console.log('used -');
-            setResult(result - Number(buffer));
+            return Number(result) - Number(buffer);
             break;
 
         case 'summary':
-          console.log('used +');
-            setResult(result + Number(buffer));
+            return Number(result) + Number(buffer);
             break;   
 
         case 'divide':
-          console.log('used /');
-            setResult(result / Number(buffer));              
+            return Number(result) / Number(buffer);              
             break; 
 
         case 'multiply':
-          console.log('used *');
-            setResult(result * Number(buffer));
+            return Number(result) * Number(buffer);
             break;         
     }
   }
 
   const addToMemory = () => {
+    if(!powerState) return;
+
     setMemory(memory + +buffer);
   }
 
   const substractFromMemory = () => {
+    if(!powerState) return;
+
     setMemory(memory - +buffer); 
   }
 
   const readFromMemory = () => {
+    if(!powerState) return;
+
     setBuffer(memory);
   }
 
-/*
+
   const getPercent = () => {
-    switch (currentOperation){
+    switch (operation){
         case 'summary':
-            result = result + (result / 100 * buffer);
-            currentOperation = '';
+            setBuffer(result + (result / 100 * buffer));
+            setOperation = '';
             break; 
 
         case 'multiply':
-            result = (result / 100 * buffer);
-            currentOperation = '';
+            setBuffer(result / 100 * buffer);
+            operation = '';
             break;
 
         case '':
-            result = buffer;
             break;
     }
-    return result;
-  } */
+  } 
 
-/* 
+
   const getRoot = () => {
-      return result = Math.sqrt(getResult());
-  } */
+    if  (operation !== '') {
+      setBuffer(getRound(Math.sqrt(runOperation(operation))));
+    }else{
+      setBuffer(getRound(Math.sqrt(buffer)));
+    }
+    setOperation('');
+  }
 
   const reset = () => {
+    if(!powerState) return;
+
       setResult(0);
       setOperation('');
       setBuffer('0');
       setMemory(0);
   }
 
- /*  const useRound = (number) => {
-    if (round){
+  const getRound = (number) => {
+    number = Number(number);
+    if (roundState){
         return number.round(2);
     }else{
         let trunc = Math.trunc(number);
         let places = screenSize - String(trunc).length - 2;
         return number.round(places);
     }
-  } */
+  } 
 
 /*   const useResult = (operation) => {
       let result;
@@ -161,17 +187,23 @@ const App = ({screenSize}) => {
   }  */
 
   const addPoint = () => {
-    const alreadyHavePoint = new RegExp(/^.*\..*/, 'g' );
+   const alreadyHavePoint = new RegExp(/^.*\..*/, 'g' );
      
     if(!alreadyHavePoint.test(buffer))
       setBuffer(buffer + '.');
   } 
 
   const getResult = () => {
-    if (operation !== '') runOperation(operation);
+    if(!powerState) return;
 
+    if  (operation !== '') {
+      let rawResult = getRound(runOperation(operation));
+      if (isNaN(rawResult))
+        setBuffer('Error');
+      else
+        setBuffer(rawResult);
+    }
     setOperation('');
-    setBuffer(result);
   }
 
 
@@ -179,16 +211,19 @@ const App = ({screenSize}) => {
       if(!powerState) return;
       
       setBuffer(String(buffer).slice(0,-1));
-      if (buffer.length <= 1) setBuffer('0');
+      if (buffer.length <= 1 || isNaN(Number(buffer))) setBuffer('0');
   }
 
   const operatorInputHandler = (operator) =>{
+    if(!powerState) return;
+
     if  (operation !== '') {
-      runOperation(operation);
- 
+      setResult(runOperation(operation));
+    }else{
+      setResult(Number(buffer));
     }
     setOperation(operator);
-    setResult(Number(buffer));
+    
     setBuffer('0');
   }
 
@@ -199,10 +234,9 @@ const App = ({screenSize}) => {
      const onlyZero = new RegExp(/^0*$/);
       if (onlyZero.test(buffer)){
         setBuffer(number.toString());
-      }else{
+      }else if(buffer.length < screenSize){
         setBuffer(buffer + number.toString());
       }
-      
   }
 
   return (
