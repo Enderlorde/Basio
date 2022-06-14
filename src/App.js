@@ -36,12 +36,12 @@ const App = ({screenSize}) => {
     {value: '3', className: 'btn_light', func: (e) => numberInputHandler(e)},
     {value: '-', className: 'btn_dark', func: () => operatorInputHandler('substract')},
     {value: '0', className: 'btn_light', func: (e) => numberInputHandler(e)},
-    {value: '.', className: 'btn_light'},
+    {value: '.', className: 'btn_light', func: () => addPoint()},
     {value: '=', className: 'btn_dark', func: () => getResult()},
     {value: '+', className: 'btn_dark', func: () => operatorInputHandler('summary')},
   ]
   
-
+  console.log(`-----------------RERENDER----------------`);
   console.log(`buffer: ${buffer}`);
   console.log(`operation: ${operation}`);
   console.log(`memory: ${memory}`);
@@ -52,21 +52,25 @@ const App = ({screenSize}) => {
   }
   
   const runOperation = (operator) => {
-
+    
     switch (operator){
         case 'difference':
+            console.log('used -');
             setResult(result - Number(buffer));
             break;
 
         case 'summary':
+          console.log('used +');
             setResult(result + Number(buffer));
             break;   
 
         case 'divide':
+          console.log('used /');
             setResult(result / Number(buffer));              
             break; 
 
         case 'multiply':
+          console.log('used *');
             setResult(result * Number(buffer));
             break;         
     }
@@ -156,18 +160,17 @@ const App = ({screenSize}) => {
       }
   }  */
 
-//   const addPoint = () => {
-//      const alreadyHavePoint = new RegExp(/^.*\..*/, 'g' );
-//      
-//      if(!alreadyHavePoint.test(buffer))
-//          buffer += '.';
-//  } 
+  const addPoint = () => {
+    const alreadyHavePoint = new RegExp(/^.*\..*/, 'g' );
+     
+    if(!alreadyHavePoint.test(buffer))
+      setBuffer(buffer + '.');
+  } 
+
   const getResult = () => {
     if (operation !== '') runOperation(operation);
-    else setResult(buffer);
 
     setOperation('');
-
     setBuffer(result);
   }
 
@@ -185,7 +188,8 @@ const App = ({screenSize}) => {
  
     }
     setOperation(operator);
-    
+    setResult(Number(buffer));
+    setBuffer('0');
   }
 
   const numberInputHandler = (e) => {
