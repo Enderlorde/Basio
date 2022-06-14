@@ -1,6 +1,6 @@
 # Casio memory-8a handheld calculator web version
 
-[Demo avialable here](https://moleflower-92gco9--62609401490815.stormkit.dev/).
+[Demo avialable here](https://butterflytyphoon-kxjxwy.stormkit.dev/).
 
 ## About calculator
 
